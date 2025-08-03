@@ -56,3 +56,4 @@ EOF
           commit_message: "🔄 Auto-update manifest.json from justcallmekoko/ESP32Marauder"
           file_pattern: "manifest.json"
           github_token: ${{ secrets.PAT_TOKEN }}
+
