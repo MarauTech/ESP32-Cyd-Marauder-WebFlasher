@@ -1,0 +1,52 @@
+name: Update manifest.json
+
+on:
+  schedule:
+    - cron: '0 1 * * *'   # Codziennie o 1:00 w nocy
+  workflow_dispatch:       # Można uruchomić też ręcznie z GitHub UI
+
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch latest release
+        id: get_release
+        run: |
+          curl -s https://api.github.com/repos/TWOJ_LOGIN/TWOJE_REPO/releases \
+          | jq -r '[.[] | .assets[] | select(.name | endswith("_2usb.bin"))][0]' > latest_asset.json
+
+      - name: Build manifest.json
+        run: |
+          NAME=$(jq -r .name latest_asset.json)
+          URL=$(jq -r .browser_download_url latest_asset.json)
+          VERSION=$(echo "$NAME" | grep -oP 'v\d+_\d+_\d+' | sed 's/_/./g')
+
+          echo "Tworzenie manifest.json dla: $NAME"
+
+          cat <<EOF > manifest.json
+{
+  "name": "ESP32 Marauder Firmware",
+  "version": "${VERSION}",
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
+        { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
+        { "path": "boot_app0.bin", "offset": 57344 },
+        { "path": "${URL}", "offset": 65536 }
+      ]
+    }
+  ]
+}
+EOF
+
+      - name: Commit and Push manifest
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Aktualizacja manifest.json (z GitHub Release)"
+          file_pattern: "manifest.json"
