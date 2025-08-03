@@ -2,21 +2,21 @@ name: Update manifest.json
 
 on:
   schedule:
-    - cron: '0 1 * * *'   # Codziennie o 1:00 w nocy
-  workflow_dispatch:       # Można uruchomić też ręcznie z GitHub UI
+    - cron: '0 1 * * *'   # Codziennie o 1:00 w nocy UTC
+  workflow_dispatch:
 
 jobs:
   update-manifest:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout this repo
         uses: actions/checkout@v4
 
-      - name: Fetch latest release
-        id: get_release
+      - name: Fetch latest ESP32 Marauder release asset
+        id: fetch_asset
         run: |
-          curl -s https://api.github.com/repos/TWOJ_LOGIN/TWOJE_REPO/releases \
+          curl -s https://api.github.com/repos/justcallmekoko/ESP32Marauder/releases \
           | jq -r '[.[] | .assets[] | select(.name | endswith("_2usb.bin"))][0]' > latest_asset.json
 
       - name: Build manifest.json
@@ -25,7 +25,7 @@ jobs:
           URL=$(jq -r .browser_download_url latest_asset.json)
           VERSION=$(echo "$NAME" | grep -oP 'v\d+_\d+_\d+' | sed 's/_/./g')
 
-          echo "Tworzenie manifest.json dla: $NAME"
+          echo "Tworzenie manifest.json dla: $NAME ($VERSION)"
 
           cat <<EOF > manifest.json
 {
@@ -48,5 +48,5 @@ EOF
       - name: Commit and Push manifest
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Aktualizacja manifest.json (z GitHub Release)"
+          commit_message: "🔄 Auto-update manifest.json from justcallmekoko/ESP32Marauder"
           file_pattern: "manifest.json"
