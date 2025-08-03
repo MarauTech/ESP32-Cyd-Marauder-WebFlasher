@@ -2,7 +2,7 @@ name: Update manifest.json
 
 on:
   schedule:
-    - cron: '0 1 * * *'   # Codziennie o 1:00 w nocy UTC
+    - cron: '0 1 * * *'   # Codziennie o 1:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -18,16 +18,13 @@ jobs:
         run: |
           RELEASES_JSON=$(curl -s https://api.github.com/repos/justcallmekoko/ESP32Marauder/releases)
           ASSET=$(echo "$RELEASES_JSON" | jq -c '[.[] | .assets[] | select(.name | endswith("_2usb.bin"))][0]')
-
           if [ "$ASSET" = "null" ] || [ -z "$ASSET" ]; then
             echo "Nie znaleziono pasującego assetu"
             exit 1
           fi
-
           NAME=$(echo "$ASSET" | jq -r '.name')
           URL=$(echo "$ASSET" | jq -r '.browser_download_url')
           VERSION=$(echo "$NAME" | grep -oP 'v\d+_\d+_\d+' | sed 's/_/./g')
-
           echo "name=$NAME" >> $GITHUB_OUTPUT
           echo "url=$URL" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -35,28 +32,27 @@ jobs:
       - name: Build manifest.json
         run: |
           echo "Tworzenie manifest.json dla: ${{ steps.fetch_asset.outputs.name }} (${{ steps.fetch_asset.outputs.version }})"
-          echo '{
-            "name": "ESP32 Marauder Firmware",
-            "version": "'"${{ steps.fetch_asset.outputs.version }}"'",
-            "builds": [
-              {
-                "chipFamily": "ESP32",
-                "parts": [
-                  { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
-                  { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
-                  { "path": "boot_app0.bin", "offset": 57344 },
-                  { "path": "'"${{ steps.fetch_asset.outputs.url }}"'", "offset": 65536 }
-                ]
-              }
-            ]
-          }' > manifest.json
+          cat <<EOF > manifest.json
+{
+  "name": "ESP32 Marauder Firmware",
+  "version": "${{ steps.fetch_asset.outputs.version }}",
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
+        { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
+        { "path": "boot_app0.bin", "offset": 57344 },
+        { "path": "${{ steps.fetch_asset.outputs.url }}", "offset": 65536 }
+      ]
+    }
+  ]
+}
+EOF
 
-     - name: Commit and Push manifest
-  uses: stefanzweifel/git-auto-commit-action@v5
-  with:
-    commit_message: "🔄 Auto-update manifest.json from justcallmekoko/ESP32Marauder"
-    file_pattern: "manifest.json"
-    github_token: ${{ secrets.PAT_TOKEN }}
-
-
-
+      - name: Commit and Push manifest
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🔄 Auto-update manifest.json from justcallmekoko/ESP32Marauder"
+          file_pattern: "manifest.json"
+          github_token: ${{ secrets.PAT_TOKEN }}
