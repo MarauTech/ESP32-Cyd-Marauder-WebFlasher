@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,10 +16,10 @@
   <main>
     <div class="card">
       <h1>ESP32 CYD Marauder Flasher</h1>
-      <div class="version">Wersja: <span id="version-number">v0.0.0</span></div>
+      <div class="version">Version: <span id="version-number">v0.0.0</span></div>
       <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
       <pre id="console" class="console"></pre>
-      <p class="instructions">Podłącz ESP32 przez USB i kliknij <strong>Install</strong>, aby wgrać najnowszy firmware.</p>
+      <p class="instructions">Connect your ESP32 via USB and click <strong>Install</strong> to flash the latest firmware.</p>
     </div>
   </main>
 
@@ -35,12 +35,11 @@
         document.getElementById('version-number').textContent = ver;
       })
       .catch(() => {
-        document.getElementById('version-number').textContent = 'brak danych';
+        document.getElementById('version-number').textContent = 'no data';
       });
 
     const consoleEl = document.getElementById('console');
-    consoleEl.textContent = 'Konsola: oczekiwanie na działanie flashera...\n';
+    consoleEl.textContent = 'Console: waiting for flasher to start...\n';
   </script>
 </body>
 </html>
-
