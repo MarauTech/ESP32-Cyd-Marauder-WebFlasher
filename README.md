@@ -15,7 +15,6 @@ To narzędzie umożliwia łatwe flashowanie firmware'u **ESP32 Marauder** bez in
 ### 📦 Zawartość repozytorium
 
 - `index.html` – interfejs użytkownika z przyciskiem „Install”
-- `manifest.json` – konfiguracja flashowania (automatycznie aktualizowana)
 - Pliki binarne (`.bin`) niezbędne do flashowania:
   - `boot_app0.bin`
   - `esp32_marauder.ino.bootloader.bin`
@@ -58,7 +57,6 @@ This is a simple web tool for flashing **ESP32 Marauder firmware** directly from
 ### 📦 Repository contents
 
 - `index.html` – user interface with the install button
-- `manifest.json` – firmware flashing config (auto-updated)
 - Flashing files (`.bin`) included:
   - `boot_app0.bin`
   - `esp32_marauder.ino.bootloader.bin`
