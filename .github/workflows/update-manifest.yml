@@ -57,3 +57,4 @@ EOF
           file_pattern: "manifest.json"
           github_token: ${{ secrets.PAT_TOKEN }}
 
+
