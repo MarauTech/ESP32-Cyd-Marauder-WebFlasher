@@ -1,0 +1,27 @@
+{
+  "name": "ESP32 Marauder Firmware",
+  "version": "1.8.3",
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        {
+          "path": "esp32_marauder.ino.bootloader.bin",
+          "offset": 4096
+        },
+        {
+          "path": "esp32_marauder.ino.partitions.bin",
+          "offset": 32768
+        },
+        {
+          "path": "boot_app0.bin",
+          "offset": 57344
+        },
+        {
+          "path": "https://github.com/justcallmekoko/ESP32Marauder/releases/download/v1.8.3/esp32_marauder_v1_8_3_20250729_cyd_2432S028_2usb.bin",
+          "offset": 65536
+        }
+      ]
+    }
+  ]
+}
