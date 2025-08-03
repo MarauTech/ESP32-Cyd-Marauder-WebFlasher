@@ -15,7 +15,7 @@
 
   <main>
     <div class="card">
-      <h1>ESP32 Marauder Flasher</h1>
+      <h1>ESP32 CYD Marauder Flasher</h1>
       <div class="version">Wersja: <span id="version-number">v0.0.0</span></div>
       <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
       <pre id="console" class="console"></pre>
@@ -28,7 +28,6 @@
   </footer>
 
   <script>
-    // Przykład wstawienia wersji do czerwonego napisu
     fetch('manifest.json')
       .then(res => res.json())
       .then(data => {
@@ -39,9 +38,9 @@
         document.getElementById('version-number').textContent = 'brak danych';
       });
 
-    // Przykład zapisu komunikatów do konsoli (tu na sztywno, możesz podpiąć eventy esp-web-tools)
     const consoleEl = document.getElementById('console');
     consoleEl.textContent = 'Konsola: oczekiwanie na działanie flashera...\n';
   </script>
 </body>
 </html>
+
