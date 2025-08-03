@@ -31,7 +31,8 @@ jobs:
 
       - name: Build manifest.json
         run: |
-          cat << 'EOF' > manifest.json
+          echo "Tworzenie manifest.json dla: ${{ steps.fetch_asset.outputs.name }} (${{ steps.fetch_asset.outputs.version }})"
+          cat <<EOF > manifest.json
 {
   "name": "ESP32 Marauder Firmware",
   "version": "${{ steps.fetch_asset.outputs.version }}",
