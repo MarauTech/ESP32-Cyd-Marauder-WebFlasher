@@ -16,18 +16,28 @@ jobs:
       - name: Fetch latest ESP32 Marauder release asset
         id: fetch_asset
         run: |
-          curl -s https://api.github.com/repos/justcallmekoko/ESP32Marauder/releases \
-          | jq -r '[.[] | .assets[] | select(.name | endswith("_2usb.bin"))][0]' > latest_asset.json
+          RELEASES_JSON=$(curl -s https://api.github.com/repos/justcallmekoko/ESP32Marauder/releases)
+          ASSET=$(echo "$RELEASES_JSON" | jq -c '[.[] | .assets[] | select(.name | endswith("_2usb.bin"))][0]')
+
+          if [ "$ASSET" = "null" ] || [ -z "$ASSET" ]; then
+            echo "Nie znaleziono pasującego assetu"
+            exit 1
+          fi
+
+          NAME=$(echo "$ASSET" | jq -r '.name')
+          URL=$(echo "$ASSET" | jq -r '.browser_download_url')
+          VERSION=$(echo "$NAME" | grep -oP 'v\d+_\d+_\d+' | sed 's/_/./g')
+
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build manifest.json
         run: |
-          NAME=$(jq -r .name latest_asset.json)
-          URL=$(jq -r .browser_download_url latest_asset.json)
-          VERSION=$(echo "$NAME" | grep -oP 'v\d+_\d+_\d+' | sed 's/_/./g')
-          echo "Tworzenie manifest.json dla: $NAME ($VERSION)"
+          echo "Tworzenie manifest.json dla: ${{ steps.fetch_asset.outputs.name }} (${{ steps.fetch_asset.outputs.version }})"
           echo '{
             "name": "ESP32 Marauder Firmware",
-            "version": "'"${VERSION}"'",
+            "version": "'"${{ steps.fetch_asset.outputs.version }}"'",
             "builds": [
               {
                 "chipFamily": "ESP32",
@@ -35,7 +45,7 @@ jobs:
                   { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
                   { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
                   { "path": "boot_app0.bin", "offset": 57344 },
-                  { "path": "'"${URL}"'", "offset": 65536 }
+                  { "path": "'"${{ steps.fetch_asset.outputs.url }}"'", "offset": 65536 }
                 ]
               }
             ]
