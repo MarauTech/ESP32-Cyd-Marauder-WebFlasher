@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP32 Marauder Flasher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script type="module" src="https://unpkg.com/esp-web-tools@9.1.1/dist/web/install-button.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: #1e293b;
+      padding: 60px 50px;
+      border-radius: 24px;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #facc15;
+    }
+    esp-web-install-button {
+      margin-top: 25px;
+      transform: scale(1.2);
+    }
+    p {
+      margin-top: 25px;
+      font-size: 1.05rem;
+      color: #cbd5e1;
+    }
+    a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>ESP32 Marauder Flasher</h1>
+    <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
+    <p>Podłącz ESP32 przez USB i kliknij <strong>Install</strong>, aby wgrać najnowszy firmware.</p>
+    <p style="margin-top: 40px; font-size: 0.85rem;">&copy; 2025 <a href="https://marautech.pl" target="_blank">MarauTech</a></p>
+  </div>
+</body>
+</html>
