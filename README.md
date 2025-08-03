@@ -27,7 +27,7 @@ To narzędzie umożliwia łatwe flashowanie firmware'u **ESP32 Marauder** bez in
 ### 🚀 Jak korzystać
 
 1. Wejdź na stronę 
-   (np. `https://marautech.github.io/ESP32-Cyd-Marauder-WebFlasher`)
+   https://marautech.github.io/ESP32-Cyd-Marauder-WebFlasher
 2. Podłącz swoje ESP32 przez USB
 3. Kliknij **Install**
 4. Gotowe! Oprogramowanie zostanie wgrane automatycznie
@@ -70,7 +70,7 @@ This is a simple web tool for flashing **ESP32 Marauder firmware** directly from
 ### 🚀 How to use
 
 1. Open the site
-   (e.g., `https://marautech.github.io/ESP32-Cyd-Marauder-WebFlasher`)
+      https://marautech.github.io/ESP32-Cyd-Marauder-WebFlasher
 2. Connect your ESP32 via USB
 3. Click **Install**
 4. The firmware will be flashed automatically
