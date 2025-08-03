@@ -24,26 +24,22 @@ jobs:
           NAME=$(jq -r .name latest_asset.json)
           URL=$(jq -r .browser_download_url latest_asset.json)
           VERSION=$(echo "$NAME" | grep -oP 'v\d+_\d+_\d+' | sed 's/_/./g')
-
           echo "Tworzenie manifest.json dla: $NAME ($VERSION)"
-
-          cat <<EOF > manifest.json
-{
-  "name": "ESP32 Marauder Firmware",
-  "version": "${VERSION}",
-  "builds": [
-    {
-      "chipFamily": "ESP32",
-      "parts": [
-        { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
-        { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
-        { "path": "boot_app0.bin", "offset": 57344 },
-        { "path": "${URL}", "offset": 65536 }
-      ]
-    }
-  ]
-}
-EOF
+          echo '{
+            "name": "ESP32 Marauder Firmware",
+            "version": "'"${VERSION}"'",
+            "builds": [
+              {
+                "chipFamily": "ESP32",
+                "parts": [
+                  { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
+                  { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
+                  { "path": "boot_app0.bin", "offset": 57344 },
+                  { "path": "'"${URL}"'", "offset": 65536 }
+                ]
+              }
+            ]
+          }' > manifest.json
 
       - name: Commit and Push manifest
         uses: stefanzweifel/git-auto-commit-action@v5
