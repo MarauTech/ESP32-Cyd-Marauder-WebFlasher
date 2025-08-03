@@ -34,6 +34,11 @@ jobs:
           echo "Tworzenie manifest.json dla: ${{ steps.fetch_asset.outputs.name }} (${{ steps.fetch_asset.outputs.version }})"
           cat <<EOF > manifest.json
 {
+       - name: Build manifest.json
+        run: |
+          echo "Tworzenie manifest.json dla: ${{ steps.fetch_asset.outputs.name }} (${{ steps.fetch_asset.outputs.version }})"
+          cat <<EOF > manifest.json
+{
   "name": "ESP32 Marauder Firmware",
   "version": "${{ steps.fetch_asset.outputs.version }}",
   "builds": [
@@ -50,9 +55,11 @@ jobs:
 }
 EOF
 
+
       - name: Commit and Push manifest
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "🔄 Auto-update manifest.json from justcallmekoko/ESP32Marauder"
           file_pattern: "manifest.json"
           github_token: ${{ secrets.PAT_TOKEN }}
+
