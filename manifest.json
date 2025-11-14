@@ -1,6 +1,6 @@
 {
   "name": "ESP32 Marauder Firmware",
-  "version": "1.8.9",
+  "version": "1.8.10",
   "builds": [
     {
       "chipFamily": "ESP32",
@@ -18,7 +18,7 @@
           "offset": 57344
         },
         {
-          "path": "esp32_marauder_v1_8_9_20251030_cyd_2432S028_2usb.bin",
+          "path": "esp32_marauder_v1_8_10_20251113_cyd_2432S028_2usb.bin",
           "offset": 65536
         }
       ]
