@@ -3,43 +3,388 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ESP32 Marauder CYD Flasher</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <title>ESP32 Marauder Flasher</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
   <script type="module" src="https://unpkg.com/esp-web-tools@9.1.1/dist/web/install-button.js"></script>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #0d1117;
+      color: #00ff41;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        repeating-linear-gradient(0deg, rgba(0, 255, 65, 0.03) 0px, transparent 1px, transparent 2px, rgba(0, 255, 65, 0.03) 3px),
+        repeating-linear-gradient(90deg, rgba(0, 255, 65, 0.03) 0px, transparent 1px, transparent 2px, rgba(0, 255, 65, 0.03) 3px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 4rem;
+      padding: 2rem;
+      border: 2px solid #00ff41;
+      background: rgba(0, 255, 65, 0.05);
+      position: relative;
+    }
+
+    header::before,
+    header::after {
+      content: '>';
+      position: absolute;
+      font-size: 3rem;
+      color: #00ff41;
+      animation: blink 1.5s infinite;
+    }
+
+    header::before {
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    header::after {
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
+    }
+
+    .subtitle {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #00ff41;
+      opacity: 0.7;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .terminal-card {
+      background: #161b22;
+      border: 2px solid #00ff41;
+      position: relative;
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+    }
+
+    .terminal-header {
+      background: #00ff41;
+      color: #0d1117;
+      padding: 0.5rem 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #0d1117;
+    }
+
+    .terminal-body {
+      padding: 2rem;
+    }
+
+    .device-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #00ff41;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .device-name::before {
+      content: '█';
+      animation: blink 1s infinite;
+    }
+
+    .info-line {
+      display: flex;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .info-label {
+      color: #00ff41;
+      opacity: 0.7;
+      min-width: 120px;
+    }
+
+    .info-value {
+      color: #00ff41;
+      font-weight: 600;
+    }
+
+    .divider {
+      height: 2px;
+      background: #00ff41;
+      margin: 1.5rem 0;
+      opacity: 0.3;
+    }
+
+    esp-web-install-button {
+      display: block;
+      width: 100%;
+      margin-top: 1.5rem;
+    }
+
+    esp-web-install-button::part(button) {
+      width: 100%;
+      background: transparent;
+      border: 2px solid #00ff41;
+      color: #00ff41;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    esp-web-install-button::part(button):hover {
+      background: #00ff41;
+      color: #0d1117;
+      box-shadow: 0 0 20px #00ff41;
+    }
+
+    .instructions {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #00ff41;
+      opacity: 0.6;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 2px solid #00ff41;
+      background: rgba(0, 255, 65, 0.05);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #00ff41;
+      text-decoration: none;
+      font-weight: 600;
+      transition: text-shadow 0.3s ease;
+    }
+
+    footer a:hover {
+      text-shadow: 0 0 10px #00ff41;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0.8rem;
+      background: rgba(0, 255, 65, 0.1);
+      border: 1px solid #00ff41;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #00ff41;
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% {
+        box-shadow: 0 0 5px #00ff41;
+      }
+      50% {
+        box-shadow: 0 0 15px #00ff41;
+      }
+    }
+
+    @media (max-width: 768px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      header::before,
+      header::after {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="header-text">ESP32 Marauder CYD Flasher</div>
-  </header>
+  <div class="container">
+    <header>
+      <h1>ESP32 Marauder</h1>
+      <div class="subtitle">FIRMWARE FLASHER v2.0</div>
+    </header>
 
-  <main>
-    <div class="card">
-      <h1>ESP32 CYD Marauder Flasher</h1>
-      <div class="version">Version: <span id="version-number">v0.0.0</span></div>
-      <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
-      <pre id="console" class="console"></pre>
-      <p class="instructions">Connect your ESP32 via USB and click <strong>Install</strong> to flash the latest firmware.</p>
-    </div>
-  </main>
+    <main>
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <span>DEVICE_CYD.exe</span>
+        </div>
+        <div class="terminal-body">
+          <div class="device-name">ESP32 CYD</div>
+          
+          <div class="info-line">
+            <span class="info-label">TYPE:</span>
+            <span class="info-value">Cheap Yellow Display</span>
+          </div>
+          <div class="info-line">
+            <span class="info-label">VERSION:</span>
+            <span class="info-value" id="cyd-version">v0.0.0</span>
+          </div>
+          <div class="info-line">
+            <span class="info-label">STATUS:</span>
+            <span class="status">
+              <span class="status-dot"></span>
+              READY
+            </span>
+          </div>
 
-  <footer>
-    <p>&copy; 2025 <a href="https://marautech.pl" target="_blank" rel="noopener">MarauTech</a></p>
-  </footer>
+          <div class="divider"></div>
+
+          <esp-web-install-button manifest="manifest-cyd.json"></esp-web-install-button>
+
+          <p class="instructions">
+            &gt; Connect ESP32 CYD via USB<br>
+            &gt; Click INSTALL to flash firmware<br>
+            &gt; Wait for process to complete
+          </p>
+        </div>
+      </div>
+
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <span>DEVICE_M5.exe</span>
+        </div>
+        <div class="terminal-body">
+          <div class="device-name">M5 StickC</div>
+          
+          <div class="info-line">
+            <span class="info-label">TYPE:</span>
+            <span class="info-value">M5Stack Stick</span>
+          </div>
+          <div class="info-line">
+            <span class="info-label">VERSION:</span>
+            <span class="info-value" id="m5-version">v0.0.0</span>
+          </div>
+          <div class="info-line">
+            <span class="info-label">STATUS:</span>
+            <span class="status">
+              <span class="status-dot"></span>
+              READY
+            </span>
+          </div>
+
+          <div class="divider"></div>
+
+          <esp-web-install-button manifest="manifest-m5.json"></esp-web-install-button>
+
+          <p class="instructions">
+            &gt; Connect M5 StickC via USB<br>
+            &gt; Click INSTALL to flash firmware<br>
+            &gt; Wait for process to complete
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&gt; Powered by <a href="https://marautech.pl" target="_blank" rel="noopener">MarauTech</a> &copy; 2025</p>
+    </footer>
+  </div>
 
   <script>
-    fetch('manifest.json')
+    fetch('manifest-cyd.json')
       .then(res => res.json())
       .then(data => {
-        const ver = data.version || 'v0.0.0';
-        document.getElementById('version-number').textContent = ver;
+        document.getElementById('cyd-version').textContent = data.version || 'v0.0.0';
       })
       .catch(() => {
-        document.getElementById('version-number').textContent = 'no data';
+        document.getElementById('cyd-version').textContent = 'no data';
       });
 
-    const consoleEl = document.getElementById('console');
-    consoleEl.textContent = 'Console: waiting for flasher to start...\n';
+    fetch('manifest-m5.json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('m5-version').textContent = data.version || 'v0.0.0';
+      })
+      .catch(() => {
+        document.getElementById('m5-version').textContent = 'no data';
+      });
   </script>
 </body>
 </html>
