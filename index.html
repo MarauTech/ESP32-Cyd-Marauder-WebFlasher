@@ -356,11 +356,21 @@
 
           <div class="divider"></div>
 
-          <esp-web-install-button manifest="manifest-cyd.json"></esp-web-install-button>
+          <div class="select-wrapper">
+            <label class="select-label">&gt; SELECT MODEL:</label>
+            <select id="cyd-model">
+              <option value="manifest-cyd-guition.json">CYD 2432S024 (Guition)</option>
+              <option value="manifest-cyd-24325028.json">CYD 2432S028</option>
+              <option value="manifest-cyd-2usb.json">CYD 2432S028 (2USB)</option>
+              <option value="manifest-cyd-35inch.json">CYD 3.5 inch</option>
+            </select>
+          </div>
+
+          <esp-web-install-button id="cyd-flasher" manifest="manifest-cyd-guition.json"></esp-web-install-button>
 
           <p class="instructions">
-            &gt; Connect your ESP32 CYD via USB<br>
-            &gt; Select model during installation<br>
+            &gt; Select your CYD model from dropdown<br>
+            &gt; Connect device via USB<br>
             &gt; Click INSTALL to flash firmware
           </p>
         </div>
@@ -396,11 +406,19 @@
 
           <div class="divider"></div>
 
-          <esp-web-install-button manifest="manifest-m5.json"></esp-web-install-button>
+          <div class="select-wrapper">
+            <label class="select-label">&gt; SELECT MODEL:</label>
+            <select id="m5-model">
+              <option value="manifest-m5-plus.json">M5 StickC Plus</option>
+              <option value="manifest-m5-plus2.json">M5 StickC Plus2</option>
+            </select>
+          </div>
+
+          <esp-web-install-button id="m5-flasher" manifest="manifest-m5-plus.json"></esp-web-install-button>
 
           <p class="instructions">
-            &gt; Connect your M5 StickC via USB<br>
-            &gt; Select model during installation<br>
+            &gt; Select your M5 model from dropdown<br>
+            &gt; Connect device via USB<br>
             &gt; Click INSTALL to flash firmware
           </p>
         </div>
@@ -413,24 +431,40 @@
   </div>
 
   <script>
-    // Ładowanie wersji z plików manifest
-    fetch('manifest-cyd.json')
+    // Ładowanie wersji z pierwszego pliku manifest
+    fetch('manifest-cyd-guition.json')
       .then(res => res.json())
       .then(data => {
         document.getElementById('cyd-version').textContent = data.version || 'v0.0.0';
       })
       .catch(() => {
-        document.getElementById('cyd-version').textContent = 'no data';
+        document.getElementById('cyd-version').textContent = 'v1.9.0';
       });
 
-    fetch('manifest-m5.json')
+    fetch('manifest-m5-plus.json')
       .then(res => res.json())
       .then(data => {
         document.getElementById('m5-version').textContent = data.version || 'v0.0.0';
       })
       .catch(() => {
-        document.getElementById('m5-version').textContent = 'no data';
+        document.getElementById('m5-version').textContent = 'v1.9.0';
       });
+
+    // Zmiana manifestu dla CYD przy zmianie modelu
+    const cydSelect = document.getElementById('cyd-model');
+    const cydFlasher = document.getElementById('cyd-flasher');
+    
+    cydSelect.addEventListener('change', function() {
+      cydFlasher.setAttribute('manifest', this.value);
+    });
+
+    // Zmiana manifestu dla M5 przy zmianie modelu
+    const m5Select = document.getElementById('m5-model');
+    const m5Flasher = document.getElementById('m5-flasher');
+    
+    m5Select.addEventListener('change', function() {
+      m5Flasher.setAttribute('manifest', this.value);
+    });
   </script>
 </body>
 </html>
