@@ -1,0 +1,46 @@
+{
+  "name": "ESP32 Marauder CYD",
+  "version": "1.9.0",
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "name": "CYD 2432S024 (Guition)",
+      "parts": [
+        { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
+        { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
+        { "path": "boot_app0.bin", "offset": 57344 },
+        { "path": "esp32_marauder_v1_9_0_20251213_cyd_24325024_guition.bin", "offset": 65536 }
+      ]
+    },
+    {
+      "chipFamily": "ESP32",
+      "name": "CYD 2432S028",
+      "parts": [
+        { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
+        { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
+        { "path": "boot_app0.bin", "offset": 57344 },
+        { "path": "esp32_marauder_v1_9_0_20251213_cyd_24325028.bin", "offset": 65536 }
+      ]
+    },
+    {
+      "chipFamily": "ESP32",
+      "name": "CYD 2432S028 (2USB)",
+      "parts": [
+        { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
+        { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
+        { "path": "boot_app0.bin", "offset": 57344 },
+        { "path": "esp32_marauder_v1_9_0_20251213_cyd_24325028_2usb.bin", "offset": 65536 }
+      ]
+    },
+    {
+      "chipFamily": "ESP32",
+      "name": "CYD 3.5 inch",
+      "parts": [
+        { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
+        { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
+        { "path": "boot_app0.bin", "offset": 57344 },
+        { "path": "esp32_marauder_v1_9_0_20251213_cyd_3_5_inch.bin", "offset": 65536 }
+      ]
+    }
+  ]
+}
