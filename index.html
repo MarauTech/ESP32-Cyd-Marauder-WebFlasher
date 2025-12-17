@@ -356,21 +356,11 @@
 
           <div class="divider"></div>
 
-          <div class="select-wrapper">
-            <label class="select-label">&gt; SELECT MODEL:</label>
-            <select id="cyd-model">
-              <option value="cyd_24325024_guition">CYD 2432S024 (Guition)</option>
-              <option value="cyd_24325028">CYD 2432S028</option>
-              <option value="cyd_24325028_2usb">CYD 2432S028 (2USB)</option>
-              <option value="cyd_3_5_inch">CYD 3.5 inch</option>
-            </select>
-          </div>
-
-          <esp-web-install-button id="cyd-flasher"></esp-web-install-button>
+          <esp-web-install-button manifest="manifest-cyd.json"></esp-web-install-button>
 
           <p class="instructions">
-            &gt; Select your CYD model<br>
-            &gt; Connect device via USB<br>
+            &gt; Connect your ESP32 CYD via USB<br>
+            &gt; Select model during installation<br>
             &gt; Click INSTALL to flash firmware
           </p>
         </div>
@@ -406,19 +396,11 @@
 
           <div class="divider"></div>
 
-          <div class="select-wrapper">
-            <label class="select-label">&gt; SELECT MODEL:</label>
-            <select id="m5-model">
-              <option value="m5stickc_plus">M5 StickC Plus</option>
-              <option value="m5stickc_plus2">M5 StickC Plus2</option>
-            </select>
-          </div>
-
-          <esp-web-install-button id="m5-flasher"></esp-web-install-button>
+          <esp-web-install-button manifest="manifest-m5.json"></esp-web-install-button>
 
           <p class="instructions">
-            &gt; Select your M5 model<br>
-            &gt; Connect device via USB<br>
+            &gt; Connect your M5 StickC via USB<br>
+            &gt; Select model during installation<br>
             &gt; Click INSTALL to flash firmware
           </p>
         </div>
@@ -431,112 +413,24 @@
   </div>
 
   <script>
-    // Wspólne pliki bootloader i partitions
-    const commonParts = [
-      { path: "esp32_marauder.ino.bootloader.bin", offset: 4096 },
-      { path: "esp32_marauder.ino.partitions.bin", offset: 32768 },
-      { path: "boot_app0.bin", offset: 57344 }
-    ];
+    // Ładowanie wersji z plików manifest
+    fetch('manifest-cyd.json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('cyd-version').textContent = data.version || 'v0.0.0';
+      })
+      .catch(() => {
+        document.getElementById('cyd-version').textContent = 'no data';
+      });
 
-    // Manifesty dla różnych modeli
-    const manifests = {
-      cyd: {
-        cyd_24325024_guition: {
-          name: "ESP32 Marauder CYD 2432S024 Guition",
-          version: "v1.9.0",
-          builds: [{
-            chipFamily: "ESP32",
-            parts: [
-              ...commonParts,
-              { path: "esp32_marauder_v1_9_0_20251213_cyd_24325024_guition.bin", offset: 65536 }
-            ]
-          }]
-        },
-        cyd_24325028: {
-          name: "ESP32 Marauder CYD 2432S028",
-          version: "v1.9.0",
-          builds: [{
-            chipFamily: "ESP32",
-            parts: [
-              ...commonParts,
-              { path: "esp32_marauder_v1_9_0_20251213_cyd_24325028.bin", offset: 65536 }
-            ]
-          }]
-        },
-        cyd_24325028_2usb: {
-          name: "ESP32 Marauder CYD 2432S028 2USB",
-          version: "v1.9.0",
-          builds: [{
-            chipFamily: "ESP32",
-            parts: [
-              ...commonParts,
-              { path: "esp32_marauder_v1_9_0_20251213_cyd_24325028_2usb.bin", offset: 65536 }
-            ]
-          }]
-        },
-        cyd_3_5_inch: {
-          name: "ESP32 Marauder CYD 3.5 inch",
-          version: "v1.9.0",
-          builds: [{
-            chipFamily: "ESP32",
-            parts: [
-              ...commonParts,
-              { path: "esp32_marauder_v1_9_0_20251213_cyd_3_5_inch.bin", offset: 65536 }
-            ]
-          }]
-        }
-      },
-      m5: {
-        m5stickc_plus: {
-          name: "ESP32 Marauder M5 StickC Plus",
-          version: "v1.9.0",
-          builds: [{
-            chipFamily: "ESP32",
-            parts: [
-              ...commonParts,
-              { path: "esp32_marauder_v1_9_0_20251213_m5stickc_plus.bin", offset: 65536 }
-            ]
-          }]
-        },
-        m5stickc_plus2: {
-          name: "ESP32 Marauder M5 StickC Plus2",
-          version: "v1.9.0",
-          builds: [{
-            chipFamily: "ESP32",
-            parts: [
-              ...commonParts,
-              { path: "esp32_marauder_v1_9_0_20251213_m5stickc_plus2.bin", offset: 65536 }
-            ]
-          }]
-        }
-      }
-    };
-
-    // Aktualizacja manifestu dla CYD
-    const cydSelect = document.getElementById('cyd-model');
-    const cydFlasher = document.getElementById('cyd-flasher');
-    
-    cydSelect.addEventListener('change', function() {
-      const selectedModel = this.value;
-      const manifest = manifests.cyd[selectedModel];
-      cydFlasher.manifest = JSON.stringify(manifest);
-    });
-    
-    // Ustaw domyślny manifest dla CYD
-    cydFlasher.manifest = JSON.stringify(manifests.cyd.cyd_24325024_guition);
-
-    // Aktualizacja manifestu dla M5
-    const m5Select = document.getElementById('m5-model');
-    const m5Flasher = document.getElementById('m5-flasher');
-    
-    m5Select.addEventListener('change', function() {
-      const selectedModel = this.value;
-      const manifest = manifests.m5[selectedModel];
-      m5Flasher.manifest = JSON.stringify(manifest);
-    });
-    
-    // Ustaw domyślny manifest dla M5
-    m5Flasher.manifest = JSON.stringify(manifests.m5.m5stickc_plus);
+    fetch('manifest-m5.json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('m5-version').textContent = data.version || 'v0.0.0';
+      })
+      .catch(() => {
+        document.getElementById('m5-version').textContent = 'no data';
+      });
   </script>
 </body>
 </html>
