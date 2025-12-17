@@ -1,0 +1,13 @@
+{
+  "name": "ESP32 Marauder M5 StickC Plus2",
+  "version": "1.9.0",
+  "builds": [{
+    "chipFamily": "ESP32",
+    "parts": [
+      { "path": "esp32_marauder.ino.bootloader.bin", "offset": 4096 },
+      { "path": "esp32_marauder.ino.partitions.bin", "offset": 32768 },
+      { "path": "boot_app0.bin", "offset": 57344 },
+      { "path": "esp32_marauder_v1_9_0_20251213_m5stickc_plus2.bin", "offset": 65536 }
+    ]
+  }]
+}
