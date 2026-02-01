@@ -1,6 +1,6 @@
 {
   "name": "ESP32 Marauder CYD 2432S028 2USB",
-  "version": "1.9.0",
+  "version": "1.10.1",
   "builds": [{
     "chipFamily": "ESP32",
     "parts": [
