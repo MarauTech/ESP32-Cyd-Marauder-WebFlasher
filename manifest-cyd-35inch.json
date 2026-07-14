@@ -1,6 +1,6 @@
 {
   "name": "ESP32 Marauder CYD 3.5 inch",
-  "version": "1.12.1",
+  "version": "1.13.0",
   "builds": [{
     "chipFamily": "ESP32",
     "parts": [
